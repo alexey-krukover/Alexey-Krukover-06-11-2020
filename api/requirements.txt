@@ -1,0 +1,9 @@
+Flask==1.1.2
+python-dotenv==0.15.0
+mysqlclient==2.0.1
+flask-sqlalchemy==2.4.4
+flask-marshmallow==0.14.0
+marshmallow-sqlalchemy==0.24.0
+flask-restful==0.3.8
+flask-login==0.5.0
+requests==2.24.0

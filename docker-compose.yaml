@@ -1,0 +1,48 @@
+version: "3"
+
+networks:
+  frontend:
+  backend:
+
+services:
+
+  mail-client:
+    image: node:10
+    working_dir: /usr/src/app/client
+    command: bash -c "yarn install && yarn build && yarn start"
+    volumes:
+      - ./client:/usr/src/app/client
+    ports:
+      - 3000:3000
+    networks:
+      - frontend
+
+  mail-api:
+    image: python:3.9.0
+    working_dir: /usr/src/app/api
+    restart: on-failure
+    command: bash -c "python3 -m venv venv && . venv/bin/activate && pip3 install -r requirements.txt && export FLASK_ENV=development && export FLASK_APP=api.py && flask run --host 0.0.0.0"
+    volumes:
+      - ./api:/usr/src/app/api
+      - ./.env:/usr/src/app/.env
+    ports:
+      - 80:5000
+    expose:
+      - 80
+    networks:
+      - frontend
+      - backend
+
+  mail-db:
+    image: library/mysql:8.0.22
+    restart: on-failure
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./.docker/mysql/:/var/lib/mysql
+    environment:
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      - backend

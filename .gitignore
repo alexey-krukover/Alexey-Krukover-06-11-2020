@@ -1,0 +1,7 @@
+/.docker/
+/.env
+/.idea/
+/api/venv/
+/client/.env
+/client/.next/
+/client/node_modules/
