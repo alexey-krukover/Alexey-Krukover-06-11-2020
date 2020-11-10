@@ -199,7 +199,7 @@ export default function MessageForm()
                   disabled
                   fullWidth
                 >
-                  Sender
+                  Recipient
                 </Button>
               </Grid>
 
