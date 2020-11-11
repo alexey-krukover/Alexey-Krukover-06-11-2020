@@ -36,7 +36,7 @@ class MessageResource(Resource):
     args = parser.parse_args()
     subject = args['subject'],
     message = args['message'],
-    sender_id = args['sender_id'],
+    sender_id = current_user.id if current_user.is_authenticated else args['sender_id'],
     receiver_id = args['receiver_id']
 
     # Makes sure the message has a subject

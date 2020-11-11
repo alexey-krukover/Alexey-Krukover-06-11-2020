@@ -17,15 +17,15 @@ import {Controller, useForm} from 'react-hook-form'
 import AsyncSelect from 'react-select/async'
 import {OptionTypeBase, StylesConfig} from "react-select"
 import {Message, MessageListingTypes, User} from "@/types"
-import {useDispatch} from "react-redux"
+import {useDispatch, useSelector} from "react-redux"
 import {add} from "@/store/slices/messagesSlice"
 import Swal from 'sweetalert2'
 import * as yup from "yup"
 import {makeStyles} from "@material-ui/core/styles";
+import {selectAuthUser} from "@/store/slices/authSlice";
 
 // Form Validation Schema
 const validationSchema = yup.object().shape({
-  sender_id: yup.number().required(),
   receiver_id: yup.number().required(),
   subject: yup.string().required(),
   message: yup.string().required(),
@@ -45,11 +45,27 @@ const useStyles = makeStyles(() => ({
  */
 export default function MessageForm()
 {
+  // Application State Hooks
+  const authUser = useSelector(selectAuthUser)
+
+  const getDynamicValidationSchema = () =>
+  {
+    if (authUser === null) {
+      return validationSchema.concat(
+        yup.object().shape({
+          sender_id: yup.number().required()
+        })
+      )
+    }
+
+    return validationSchema
+  }
+
   // Misc Hooks
   const classes = useStyles()
   const dispatch = useDispatch()
   const {control, register, errors, handleSubmit, reset} = useForm({
-    resolver: yupResolver(validationSchema)
+    resolver: yupResolver(getDynamicValidationSchema())
   })
 
   // Component State Hooks
@@ -104,7 +120,7 @@ export default function MessageForm()
           'error'
         )
 
-        // In exception retunr an empty list as to empty the options
+        // In exception return an empty list as to empty the options
         callback([])
       })
   }
@@ -161,34 +177,38 @@ export default function MessageForm()
           <CardContent>
             <Grid container spacing={3}>
 
-              {/* Sender Field Prefix */}
-              <Grid item xs={1}>
-                <Button
-                  startIcon={<FontAwesomeIcon icon={faPortalEnter} />}
-                  variant="contained"
-                  className={classes.userFieldPrefix}
-                  disabled
-                  fullWidth
-                  >
-                  Sender
-                </Button>
-              </Grid>
+              {authUser === null &&
+                <>
+                  {/* Sender Field Prefix */}
+                  <Grid item xs={1}>
+                    <Button
+                      startIcon={<FontAwesomeIcon icon={faPortalEnter} />}
+                      variant="contained"
+                      className={classes.userFieldPrefix}
+                      disabled
+                      fullWidth
+                    >
+                      Sender
+                    </Button>
+                  </Grid>
 
-              {/* Sender Field Input */}
-              <Grid item xs={5}>
-                <Controller
-                  render={ props =>
-                    <AsyncSelect
-                      loadOptions={findUsers}
-                      onChange={(value: OptionTypeBase) => props.onChange(value.value)}
-                      styles={customSenderSelectStyles}
+                  {/* Sender Field Input */}
+                  <Grid item xs={5}>
+                    <Controller
+                      render={ props =>
+                        <AsyncSelect
+                          loadOptions={findUsers}
+                          onChange={(value: OptionTypeBase) => props.onChange(value.value)}
+                          styles={customSenderSelectStyles}
+                        />
+                      }
+                      control={control}
+                      defaultValue={null}
+                      name="sender_id"
                     />
-                  }
-                  control={control}
-                  defaultValue={null}
-                  name="sender_id"
-                />
-              </Grid>
+                  </Grid>
+                </>
+              }
 
               {/* Recipient Field Prefix */}
               <Grid item xs={1}>
@@ -204,7 +224,7 @@ export default function MessageForm()
               </Grid>
 
               {/* Recipient Field Input */}
-              <Grid item xs={5}>
+              <Grid item xs={authUser === null ? 5 : 11}>
                 <Controller
                   render={ props =>
                     <AsyncSelect
