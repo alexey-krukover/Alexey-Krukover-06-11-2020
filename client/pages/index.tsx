@@ -9,17 +9,13 @@ import MessagesContainer from '@/components/Containers/Messages';
  *
  * @constructor
  */
-export default function Main() {
+export default function Main()
+{
+  // Application State Hooks
   const authUser = useSelector(selectAuthUser)
 
   // Render
-  return(
-    <div>
-      {
-        authUser === null
-          ? <AuthForm/>
-          : <MessagesContainer/>
-      }
-    </div>
-  )
+  return authUser === null
+    ? <AuthForm/>
+    : <MessagesContainer/>
 }

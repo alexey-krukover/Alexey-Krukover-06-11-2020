@@ -7,6 +7,7 @@ import theme from '@/styles/theme';
 import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Navbar from '@/components/Layout/Navbar';
+import {Box} from "@material-ui/core";
 
 // The component props constraint
 interface Props {
@@ -42,13 +43,17 @@ export default function MyApp({ Component, Props }: Props)
         {/* The Body */}
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <Box width="100%" height="100%" flexDirection="column" display="flex">
 
-          {/* Application Navbar */}
-          <Navbar/>
+            {/* Application Navbar */}
+            <Navbar/>
 
-          {/* Component Entrypoint */}
-          <Component {...Props} />
+            {/* Component Entrypoint */}
+            <Box flexGrow={1}>
+              <Component {...Props} />
+            </Box>
 
+          </Box>
         </ThemeProvider>
 
       </>

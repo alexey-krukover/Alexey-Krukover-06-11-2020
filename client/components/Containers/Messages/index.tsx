@@ -5,7 +5,8 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   Grid,
-  Chip
+  Chip,
+  Box
 } from "@material-ui/core"
 import {Message, MessageListingTypes} from "@/types";
 import React, {useEffect, useState} from "react";
@@ -66,7 +67,7 @@ export default function MessagesContainer()
 
   // Render
   return(
-    <Grid container spacing={3}>
+    <Grid container>
 
       {/* Message Listing Selection */}
       <Grid item xs={2}>
@@ -110,21 +111,23 @@ export default function MessagesContainer()
 
       {/* Messages Panel */}
       <Grid item xs={10}>
-        {
-          selectedMessage === null
-            ?
+        <Box width="100%" max-height="100%" overflow="auto" flex={1} flexDirection="column" display="flex">
+          {
+            selectedMessage === null
+              ?
               <MessageList
                 listingType={selectedListing}
                 messages={getSelectedListingMessages()}
                 messageSelectionHandler={setSelectedMessage}
               />
-            :
+              :
               <MessageViewer
                 listingType={selectedListing}
                 message={selectedMessage}
                 messageSelectionHandler={setSelectedMessage}
               />
-        }
+          }
+        </Box>
       </Grid>
 
     </Grid>
