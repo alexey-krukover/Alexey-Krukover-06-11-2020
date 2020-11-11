@@ -25,12 +25,14 @@ class User(db.Model, UserMixin):
     inbox = db.relationship(
       "Message",
       secondary=Listing.__table__,
-      primaryjoin=f"and_(Listing.type=='{ListingTypes.inbox.name}', Listing.user_id==User.id)"
+      primaryjoin=f"and_(Listing.type=='{ListingTypes.inbox.name}', Listing.user_id==User.id)",
+      order_by="desc(Message.created_at)"
     )
     outbox = db.relationship(
       "Message",
       secondary=Listing.__table__,
-      primaryjoin=f"and_(Listing.type=='{ListingTypes.outbox.name}', Listing.user_id==User.id)"
+      primaryjoin=f"and_(Listing.type=='{ListingTypes.outbox.name}', Listing.user_id==User.id)",
+      order_by="desc(Message.created_at)"
     )
 
     # Methods
