@@ -43,6 +43,10 @@ const useStyles = makeStyles(() => {
       marginLeft: 30,
       fontWeight: 400
     },
+    content: {
+      maxHeight: 100,
+      overflow: 'hidden'
+    },
     timestamp: {
       textAlign: "right",
       minWidth: 120,
@@ -137,6 +141,7 @@ export default function MessageList(props: Props)
 
                 {/* Message Subject & Content */}
                 <ListItemText
+                  className={classes.content}
                   primary={
                     <>
                       <Typography component="span" className={classes.subject}>
@@ -166,7 +171,7 @@ export default function MessageList(props: Props)
               </ListItem>
 
               {/* Message Divider */}
-              <Divider variant="middle" component="li" />
+              <Divider component="li" />
             </div>
           )
         })
